@@ -1,10 +1,11 @@
 using DAL.Context.EF;
 using DAL.Extensions;
+using BL.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
+
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.LoadServiceExtetion(builder.Configuration);
 builder.Services.LoadDalExtension(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<BECPContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Local")));

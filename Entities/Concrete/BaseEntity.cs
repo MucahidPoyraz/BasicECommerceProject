@@ -1,5 +1,4 @@
 ﻿using Common.Interfaces;
-using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Concrete
 {

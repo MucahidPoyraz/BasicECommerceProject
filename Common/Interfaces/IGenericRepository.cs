@@ -1,6 +1,36 @@
-﻿namespace Common.Interfaces
+﻿using Common.PageModels;
+using System.Linq.Expressions;
+
+namespace Common.Interfaces
 {
-    public class IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : class
     {
+        // Ekleme
+        Task<T> AddAsync(T entity);
+
+        // Güncelleme (row version için overload eklenebilir)
+        Task UpdateAsync(T entity);
+
+        // Silme (Soft Delete varsayılan olarak yapılacak)
+        Task DeleteAsync(T entity);
+        Task HardDeleteAsync(T entity);
+
+        // Tümünü listeleme (filtre opsiyonel, include opsiyonel)
+        Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties);
+        Task<PaginatedList<T>> GetPaginatedAsync(
+            int pageIndex,
+            int pageSize,
+            Expression<Func<T, bool>> predicate = null,
+            Expression<Func<T, object>> orderBy = null,
+            bool ascending = true,
+            params Expression<Func<T, object>>[] includeProperties);
+        // Tekil kayıt getirme
+        Task<T> GetAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties);
+
+        // Varlık var mı kontrolü
+        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+
+        // Count (soft delete filtreli)
+        Task<int> CountAsync(Expression<Func<T, bool>> predicate = null);
     }
 }
