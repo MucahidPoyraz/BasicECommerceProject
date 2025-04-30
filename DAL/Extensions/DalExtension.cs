@@ -2,10 +2,9 @@
 using DAL.Concrete;
 using DAL.Context.EF;
 using DAL.UnitOfWork;
-using Entities.Concrete;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Extensions
 {
@@ -13,21 +12,14 @@ namespace DAL.Extensions
     {
         public static IServiceCollection LoadDalExtension(this IServiceCollection services, IConfiguration config)
         {
+            // DbContext servisini ekliyoruz
+            services.AddDbContext<BECPContext>(options =>
+                options.UseSqlServer(config.GetConnectionString("Local")));
+
+            // Generic repository için DI
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            services.AddIdentity<AppUser, AppRole>(options =>
-            {
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 3;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-
-                options.User.RequireUniqueEmail = false;
-            })
-            .AddEntityFrameworkStores<BECPContext>()
-            .AddDefaultTokenProviders();
-
+            // UnitOfWork için DI
             services.AddScoped<IUow, Uow>();
 
             return services;

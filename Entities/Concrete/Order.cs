@@ -3,8 +3,8 @@
     public class Order : BaseEntity
     {
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
-        public string AppUserId { get; set; }
-        public AppUser AppUser { get; set; }
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

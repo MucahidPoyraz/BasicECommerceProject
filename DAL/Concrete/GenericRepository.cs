@@ -38,7 +38,7 @@ namespace DAL.Concrete
         }
 
         public async Task DeleteAsync(T entity)
-        {
+        { 
             if (entity is BaseEntity baseEntity)
             {
                 baseEntity.IsDeleted = true;
@@ -65,8 +65,8 @@ namespace DAL.Concrete
                 query = query.Where(predicate);
 
             query = includeProperties.Aggregate(query, (current, include) => current.Include(include));
-
-            return await query.ToListAsync();
+            var response = await query.ToListAsync();
+            return response;
         }
 
         public async Task<List<T>> GetAllAsync(Expression<Func<T, object>> orderBy, bool ascending = true, Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties)

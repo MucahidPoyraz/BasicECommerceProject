@@ -9,18 +9,16 @@ namespace BL.Concrete
     public class GenericManager<T> : IGenericManager<T> where T : class, new()
     {
         private readonly IGenericRepository<T> _repository;
-        private readonly ILoggerManager _logger;
 
-        public GenericManager(IGenericRepository<T> repository, ILoggerManager logger)
+        public GenericManager(IGenericRepository<T> repository)
         {
             _repository = repository;
-            _logger = logger;
         }
 
         private TResponse<TRes> HandleException<TRes>(Exception ex)
         {
             string message = $"[GenericManager<{typeof(T).Name}>] An error occurred: {ex.Message}";
-            _logger.LogError(message);
+          
 
             return new TResponse<TRes>
             {
@@ -33,7 +31,7 @@ namespace BL.Concrete
             try
             {
                 var addedEntity = await _repository.AddAsync(entity);
-                _logger.LogInfo($"{typeof(T).Name} entity added successfully.");
+              
                 return new TResponse<T>
                 {
                     Message = "Entity added successfully.",
@@ -52,7 +50,7 @@ namespace BL.Concrete
             try
             {
                 await _repository.UpdateAsync(entity);
-                _logger.LogInfo($"{typeof(T).Name} entity updated successfully.");
+            
                 return new TResponse<T>
                 {
                     Message = "Entity updated successfully.",
@@ -71,7 +69,7 @@ namespace BL.Concrete
             try
             {
                 await _repository.DeleteAsync(entity);
-                _logger.LogInfo($"{typeof(T).Name} entity deleted successfully.");
+              
                 return new TResponse<T>
                 {
                     Message = "Entity deleted successfully.",
@@ -91,7 +89,7 @@ namespace BL.Concrete
             try
             {
                 var data = await _repository.GetAllAsync(predicate, includes);
-                _logger.LogInfo($"{typeof(T).Name} entities retrieved successfully.");
+             
                 return new TResponse<List<T>>
                 {
                     Message = "Entities retrieved successfully.",
@@ -114,7 +112,7 @@ namespace BL.Concrete
                 var data = await _repository.GetAsync(predicate, includes);
                 if (data == null)
                 {
-                    _logger.LogWarning($"{typeof(T).Name} entity not found.");
+                 
                     return new TResponse<T>
                     {
                         Message = "Entity not found.",
@@ -122,7 +120,7 @@ namespace BL.Concrete
                     };
                 }
 
-                _logger.LogInfo($"{typeof(T).Name} entity retrieved successfully.");
+               
                 return new TResponse<T>
                 {
                     Message = "Entity retrieved successfully.",
@@ -141,7 +139,7 @@ namespace BL.Concrete
             try
             {
                 var exists = await _repository.AnyAsync(predicate);
-                _logger.LogInfo($"Existence check for {typeof(T).Name} completed. Result: {exists}");
+            
                 return new TResponse<bool>
                 {
                     Message = "Existence check completed.",
@@ -160,7 +158,7 @@ namespace BL.Concrete
             try
             {
                 var count = await _repository.CountAsync(predicate);
-                _logger.LogInfo($"{typeof(T).Name} count retrieved successfully. Count: {count}");
+               
                 return new TResponse<int>
                 {
                     Message = "Count retrieved successfully.",
@@ -185,7 +183,7 @@ namespace BL.Concrete
             try
             {
                 var pagedData = await _repository.GetPaginatedAsync(pageIndex, pageSize, predicate, orderBy, ascending, includes);
-                _logger.LogInfo($"{typeof(T).Name} paginated data retrieved successfully.");
+             
                 return new TResponse<PaginatedList<T>>
                 {
                     Message = "Paginated data retrieved successfully.",

@@ -1,17 +1,17 @@
 ﻿using Entities.Concrete;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace DAL.Context.EF
 {
-    public class BECPContext : IdentityDbContext<AppUser, AppRole, int>
+    public class BECPContext : DbContext
     {
         public BECPContext(DbContextOptions<BECPContext> context) : base(context)
         {
 
         }
 
+        public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Product> Products { get; set; }
